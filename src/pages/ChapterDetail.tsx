@@ -178,7 +178,12 @@ export default function ChapterDetail() {
 
       const prompt = `Analyze this meeting transcript. Return a JSON object with two strictly named keys: "title" (a short title for the meeting) and "overview" (a summary of the meeting). Transcript: \n\n${trimmed}`;
       
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
+      let response;
+    let retries = 3;
+    let delay = 2000;
+
+    for (let i = 0; i < retries; i++) {
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -187,11 +192,21 @@ export default function ChapterDetail() {
         })
       });
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error("Gemini API Error Details:", errorData);
-        throw new Error(`Gemini API Error (${response.status}). Check the console for details.`);
+      if (response.status !== 503) {
+        break; 
       }
+
+      if (i < retries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2; 
+      }
+    }
+
+    if (!response || !response.ok) {
+      const errorData = response ? await response.text() : "No response";
+      console.error("Gemini API Error Details:", errorData);
+      throw new Error(`Gemini API Error (${response?.status || 'Unknown'}). The model is busy, please try uploading again in a moment.`);
+    }
 
       const aiData = await response.json();
       const generatedText = aiData.candidates?.[0]?.content?.parts?.[0]?.text;
