@@ -200,7 +200,7 @@ export function Transcripts() {
             placeholder="Paste the raw meeting transcript here…"
             rows={10}
             value={transcript}
-            onChange={(e) => setTranscript(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTranscript(e.target.value)}
             disabled={isSummarizing}
           />
           <div>
@@ -293,7 +293,7 @@ export function Transcripts() {
                 placeholder="Add any extra notes about this meeting…"
                 rows={3}
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value)}
                 disabled={isSaving}
               />
             </div>
@@ -394,14 +394,14 @@ export function Transcripts() {
                               aria-label="Title"
                               placeholder="Title"
                               value={editForm.title}
-                              onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditForm({ ...editForm, title: e.target.value })}
                             />
                             <Textarea
                               aria-label="Overview"
                               placeholder="Overview"
                               rows={3}
                               value={editForm.overview}
-                              onChange={(e) =>
+                              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                 setEditForm({ ...editForm, overview: e.target.value })
                               }
                             />
@@ -436,7 +436,7 @@ export function Transcripts() {
                                 className="mt-1"
                                 aria-label="Attendees"
                                 value={editForm.attendees}
-                                onChange={(e) =>
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                   setEditForm({ ...editForm, attendees: e.target.value })
                                 }
                               />
@@ -661,7 +661,7 @@ function PersonPicker({
               aria-label="New chapter location name"
               placeholder="e.g. Downtown Chapter"
               value={newLocationName}
-              onChange={(e) => setNewLocationName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewLocationName(e.target.value)}
               autoFocus
             />
             <Button
@@ -677,7 +677,7 @@ function PersonPicker({
             aria-label="Chapter location"
             className={cn('mt-1 w-full', selectClassName)}
             value={locationScopeId}
-            onChange={(e) => handleLocationScopeChange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleLocationScopeChange(e.target.value)}
             disabled={disabled}
           >
             <option value="">No chapter location</option>
@@ -710,7 +710,7 @@ function PersonPicker({
               aria-label="Your name"
               placeholder="Your name…"
               value={newPersonName}
-              onChange={(e) => setNewPersonName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPersonName(e.target.value)}
               autoFocus
             />
             <Button type="submit" variant="secondary" disabled={newPersonName.trim().length === 0}>
@@ -722,7 +722,7 @@ function PersonPicker({
             aria-label="Person"
             className={cn('mt-1 w-full', selectClassName)}
             value={personId}
-            onChange={(e) => onPersonChange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onPersonChange(e.target.value)}
             disabled={disabled}
           >
             <option value="">No person</option>
@@ -757,7 +757,7 @@ function EditField({
         aria-label={label}
         rows={3}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
       />
     </div>
   );
