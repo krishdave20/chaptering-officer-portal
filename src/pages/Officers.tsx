@@ -24,8 +24,8 @@ export function Officers() {
   const [view, setView] = useState<View>({ kind: 'list' });
   const [newPersonName, setNewPersonName] = useState('');
 
-  const peopleById = useMemo(() => new Map(people.map((p) => [p.id, p])), [people]);
-  const locationsById = useMemo(() => new Map(locations.map((l) => [l.id, l])), [locations]);
+  const peopleById = useMemo(() => new Map(people.map((p: any) => [p.id, p])), [people]);
+  const locationsById = useMemo(() => new Map(locations.map((l: any) => [l.id, l])), [locations]);
 
   const handleAddPerson = async (event: FormEvent) => {
     event.preventDefault();

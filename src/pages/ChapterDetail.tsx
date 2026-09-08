@@ -32,7 +32,6 @@ export default function ChapterDetail() {
   const [transcripts, setTranscripts] = useState<MeetingDigest[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // Edit mode state for Chapter
   const [isEditing, setIsEditing] = useState(false);
   const [chapterName, setChapterName] = useState("");
   const [chapterLocation, setChapterLocation] = useState("");
@@ -42,12 +41,10 @@ export default function ChapterDetail() {
   const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Transcript upload state
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Transcript edit mode state
   const [editingDigestId, setEditingDigestId] = useState<string | null>(null);
   const [editDigestTitle, setEditDigestTitle] = useState("");
   const [editDigestOverview, setEditDigestOverview] = useState("");
@@ -157,7 +154,7 @@ export default function ChapterDetail() {
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (!file || !id) return;
 
     setIsSummarizing(true);
@@ -179,34 +176,34 @@ export default function ChapterDetail() {
       const prompt = `Analyze this meeting transcript. Return a JSON object with two strictly named keys: "title" (a short title for the meeting) and "overview" (a summary of the meeting). Transcript: \n\n${trimmed}`;
       
       let response;
-    let retries = 3;
-    let delay = 2000;
+      let retries = 3;
+      let delay = 2000;
 
-    for (let i = 0; i < retries; i++) {
-      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json" }
-        })
-      });
+      for (let i = 0; i < retries; i++) {
+        response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: "application/json" }
+          })
+        });
 
-      if (response.status !== 503) {
-        break; 
+        if (response.status !== 503) {
+          break; 
+        }
+
+        if (i < retries - 1) {
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2; 
+        }
       }
 
-      if (i < retries - 1) {
-        await new Promise(resolve => setTimeout(resolve, delay));
-        delay *= 2; 
+      if (!response || !response.ok) {
+        const errorData = response ? await response.text() : "No response";
+        console.error("Gemini API Error Details:", errorData);
+        throw new Error(`Gemini API Error (${response?.status || 'Unknown'}). The model is busy, please try uploading again in a moment.`);
       }
-    }
-
-    if (!response || !response.ok) {
-      const errorData = response ? await response.text() : "No response";
-      console.error("Gemini API Error Details:", errorData);
-      throw new Error(`Gemini API Error (${response?.status || 'Unknown'}). The model is busy, please try uploading again in a moment.`);
-    }
 
       const aiData = await response.json();
       const generatedText = aiData.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -313,7 +310,6 @@ export default function ChapterDetail() {
           ← Back to Dashboard
         </button>
 
-        {/* Chapter Header & Info Card */}
         <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e4e4e7', marginBottom: '2rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
             <div>
@@ -333,7 +329,6 @@ export default function ChapterDetail() {
             </button>
           </div>
 
-          {/* Edit Form */}
           {isEditing && (
             <form onSubmit={handleUpdateChapter} style={{ borderTop: '1px solid #e4e4e7', paddingTop: '1rem', marginTop: '1rem' }}>
               <h3 style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>Edit Chapter Details</h3>
@@ -344,7 +339,7 @@ export default function ChapterDetail() {
                 <input 
                   type="text" 
                   value={chapterName} 
-                  onChange={(e) => setChapterName(e.target.value)} 
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setChapterName((e.target as HTMLInputElement).value)} 
                   required 
                   style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
                 />
@@ -355,7 +350,7 @@ export default function ChapterDetail() {
                 <input 
                   type="text" 
                   value={chapterLocation} 
-                  onChange={(e) => setChapterLocation(e.target.value)} 
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setChapterLocation((e.target as HTMLInputElement).value)} 
                   required 
                   style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
                 />
@@ -365,7 +360,7 @@ export default function ChapterDetail() {
                 <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.25rem', fontWeight: 500 }}>Progress Status</label>
                 <select 
                   value={progress} 
-                  onChange={(e) => setProgress(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setProgress((e.target as HTMLSelectElement).value)}
                   style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc', background: '#fff' }}
                 >
                   <option value="Needs Training">Needs Training</option>
@@ -380,7 +375,7 @@ export default function ChapterDetail() {
                   <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.25rem', fontWeight: 500 }}>Other Progress Notes</label>
                   <textarea 
                     value={progressNotes} 
-                    onChange={(e) => setProgressNotes(e.target.value)} 
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setProgressNotes((e.target as HTMLTextAreaElement).value)} 
                     rows={3}
                     style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
                   />
@@ -392,7 +387,7 @@ export default function ChapterDetail() {
                 <input 
                   type="text" 
                   value={boardMembersInput} 
-                  onChange={(e) => setBoardMembersInput(e.target.value)} 
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBoardMembersInput((e.target as HTMLInputElement).value)} 
                   placeholder="e.g., Jane Doe, John Smith" 
                   style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
                 />
@@ -409,7 +404,6 @@ export default function ChapterDetail() {
           )}
         </div>
 
-        {/* Transcripts Section */}
         <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e4e4e7', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#111' }}>Meeting Summaries & Transcripts</h2>
@@ -422,7 +416,11 @@ export default function ChapterDetail() {
                 onChange={handleFileUpload} 
               />
               <button 
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => {
+                  if (fileInputRef.current) {
+                     (fileInputRef.current as HTMLInputElement).click();
+                  }
+                }}
                 disabled={isSummarizing}
                 style={{ padding: '0.5rem 1rem', background: '#0066cc', color: '#fff', border: 'none', borderRadius: '4px', cursor: isSummarizing ? 'not-allowed' : 'pointer', fontSize: '0.875rem', fontWeight: 600 }}
               >
@@ -444,13 +442,13 @@ export default function ChapterDetail() {
                     <div>
                       <input 
                         value={editDigestTitle} 
-                        onChange={(e) => setEditDigestTitle(e.target.value)} 
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditDigestTitle((e.target as HTMLInputElement).value)} 
                         style={{ width: '100%', marginBottom: '0.5rem', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
                         placeholder="Meeting Title"
                       />
                       <textarea 
                         value={editDigestOverview} 
-                        onChange={(e) => setEditDigestOverview(e.target.value)} 
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditDigestOverview((e.target as HTMLTextAreaElement).value)} 
                         rows={4}
                         style={{ width: '100%', marginBottom: '0.5rem', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
                         placeholder="Meeting Overview"

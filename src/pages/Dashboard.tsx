@@ -204,7 +204,7 @@ export default function Dashboard() {
               <input 
                 type="text" 
                 value={chapterName} 
-                onChange={(e) => setChapterName(e.target.value)} 
+                onChange={(e) => setChapterName((e.target as HTMLInputElement).value)} 
                 placeholder="e.g., Arcadia High School" 
                 required 
                 style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
@@ -216,7 +216,7 @@ export default function Dashboard() {
               <input 
                 type="text" 
                 value={chapterLocation} 
-                onChange={(e) => setChapterLocation(e.target.value)} 
+                onChange={(e) => setChapterLocation((e.target as HTMLInputElement).value)} 
                 placeholder="e.g., Arcadia, California" 
                 required 
                 style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
@@ -227,7 +227,7 @@ export default function Dashboard() {
               <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.25rem', fontWeight: 500 }}>Progress Status</label>
               <select 
                 value={progress} 
-                onChange={(e) => setProgress(e.target.value)}
+                onChange={(e) => setProgress((e.target as HTMLSelectElement).value)}
                 style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc', background: '#fff' }}
               >
                 <option value="Needs Training">Needs Training</option>
@@ -242,7 +242,7 @@ export default function Dashboard() {
                 <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.25rem', fontWeight: 500 }}>Other Progress Notes</label>
                 <textarea 
                   value={progressNotes} 
-                  onChange={(e) => setProgressNotes(e.target.value)} 
+                  onChange={(e) => setProgressNotes((e.target as HTMLTextAreaElement).value)} 
                   placeholder="Describe the current progress..." 
                   rows={3}
                   style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
@@ -255,7 +255,7 @@ export default function Dashboard() {
               <input 
                 type="text" 
                 value={boardMembersInput} 
-                onChange={(e) => setBoardMembersInput(e.target.value)} 
+                onChange={(e) => setBoardMembersInput((e.target as HTMLInputElement).value)} 
                 placeholder="e.g., Jane Doe, John Smith, Mary Wells" 
                 style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
               />

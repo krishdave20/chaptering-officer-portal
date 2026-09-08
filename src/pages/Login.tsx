@@ -57,7 +57,7 @@ export default function Login() {
           <input 
             type="email" 
             value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
+            onChange={(e) => setEmail((e.target as HTMLInputElement).value)} 
             required 
             style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
           />
@@ -68,7 +68,7 @@ export default function Login() {
           <input 
             type="password" 
             value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
+            onChange={(e) => setPassword((e.target as HTMLInputElement).value)} 
             required 
             style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc' }} 
           />

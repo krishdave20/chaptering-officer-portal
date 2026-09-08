@@ -30,7 +30,7 @@ export function Home() {
             aria-label="Message"
             placeholder="Type a message…"
             value={draft}
-            onChange={(e) => setDraft(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDraft(e.target.value)}
             disabled={isSaving}
           />
           <Button type="submit" disabled={isSaving || draft.trim().length === 0}>
@@ -46,7 +46,7 @@ export function Home() {
             <p className="text-sm text-slate-500">No messages yet — be the first to send one.</p>
           ) : (
             <ul className="divide-y divide-slate-100">
-              {messages.map((item) => (
+              {messages.map((item: any) => (
                 <li key={item.id} className="py-2 text-sm">
                   <p className="text-slate-900">{item.message}</p>
                   <p className="text-xs text-slate-400">
