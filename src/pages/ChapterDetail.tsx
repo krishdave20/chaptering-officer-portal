@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, type FormEvent } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
+import ResearchDocsSection from "@/components/research/ResearchDocsSection";
 
 interface Chapter {
   id: string;
@@ -290,7 +291,7 @@ export default function ChapterDetail() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#f9f9fb', fontFamily: 'sans-serif', padding: '2rem' }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '960px', margin: '0 auto' }}>
         <button 
           onClick={() => navigate("/dashboard")}
           style={{ background: 'none', border: 'none', color: '#0066cc', cursor: 'pointer', padding: 0, marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500 }}
@@ -393,6 +394,8 @@ export default function ChapterDetail() {
             </form>
           )}
         </div>
+
+        <ResearchDocsSection locationId={chapter.id} />
 
         {/* Transcripts Section */}
         <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e4e4e7', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
